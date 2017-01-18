@@ -1,6 +1,6 @@
 ## Hash Collisions in Dropbox Passwords? No Problem.
 
-Recently, Dropbox posted their [new process for securing user's passwords](https://blogs.dropbox.com/tech/2016/09/how-dropbox-securely-stores-your-passwords/). A critical reader might realize that SHA512-ing all passwords of arbitrary length could potentially lead to hash collisions. Well, they would be correct. But, why would that be a security concern? Hash collisions basically equates to: every password will now have multiple qualifying text strings. In other words: an attacker has an increased number of possible text strings that they can guess that the system will accept as equivalent to a user's password (after they are hashed).
+Recently, Dropbox posted their [new process for securing user's passwords](https://blogs.dropbox.com/tech/2016/09/how-dropbox-securely-stores-your-passwords/). A critical reader might realize that SHA512-ing all passwords of arbitrary length could potentially lead to hash collisions. Well, they would be correct. But, why would that be a security concern? Hash collisions basically equate to: every password will now have multiple qualifying text strings. In other words: an attacker has an increased number of possible text strings that they can guess that the system will accept as equivalent to a user's password (after they are hashed).
 
 Yikes! That sounds terrible! In fact, some simple mathematics shows us: if we allow passwords up to 256 bytes in length over the same alphabet of characters that the SHA512 algorithm will hash your text too, then every user's password could have as many as 191 other pieces of text (besides their actual password) that the system will accept as being their password! So, how has Dropbox not been pwned yet?
 
@@ -10,4 +10,4 @@ $$\frac{1}{|A^{64}|} >> \frac{192}{|A^{256}|}$$
 
 So, even with allowing hash collisions we are still getting increased security benefits (in terms of probabilities). Pretty neat, huh?
 
-Btw, my Mathematics is oversimplified and very possibly incorrect! However, the basic conclusion still remains true. Thanks for reading!
+Btw, my Mathematics is oversimplified and very possibly incorrect! However, the basic conclusion still remains true. You will have to forgive me as this post was thought up in an hour and written in a quarter of that time. Thanks for reading!
