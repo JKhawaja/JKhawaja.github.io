@@ -6,7 +6,7 @@ Yikes! That sounds terrible! In fact, some simple mathematics shows us: if we al
 
 Thankfully, the mathematics does not stop there. We also have to consider that while an attacker may have an increased penetration window, they also have a massively decreased probability of getting through that window. For example, if we decided to try to avoid hash collisions and only allow our user's passwords to be of a length no greater than the length of SHA512 hashes, then our attacker would only have 1 shot in a \|Alphabet^64\| chance of guessing our password text. But, here is the cool part ... That number is WAY larger than if we allow hash collisions and give our attacker a 192 in \|Alphabet^256\| chance of guessing a valid password text.
 
-$$\frac{1}{|A^{64}|} >> \frac{192}{|A^{256}|}$$
+\$\$\frac{1}{|A^{64}|} >> \frac{192}{|A^{256}|}\$\$
 
 So, even with allowing hash collisions we are still getting increased security benefits (in terms of probabilities). Pretty neat, huh?
 
