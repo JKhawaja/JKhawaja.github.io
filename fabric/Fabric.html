@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)http://localhost:3999/fabric.slide#1 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Fabric</title>
+    
+    <script>
+      var notesEnabled =  false ;
+    </script>
+    <script src="./Fabric_files/slides.js.download"></script>
+
+    
+
+    <script>
+      
+      if (window["location"] && window["location"]["hostname"] == "talks.golang.org") {
+        var _gaq = _gaq || [];
+        _gaq.push(["_setAccount", "UA-11222381-6"]);
+        _gaq.push(["b._setAccount", "UA-49880327-6"]);
+        window.trackPageview = function() {
+          _gaq.push(["_trackPageview", location.pathname+location.hash]);
+          _gaq.push(["b._trackPageview", location.pathname+location.hash]);
+        };
+        window.trackPageview();
+        window.trackEvent = function(category, action, opt_label, opt_value, opt_noninteraction) {
+          _gaq.push(["_trackEvent", category, action, opt_label, opt_value, opt_noninteraction]);
+          _gaq.push(["b._trackEvent", category, action, opt_label, opt_value, opt_noninteraction]);
+        };
+      }
+    </script>
+  <meta name="viewport" content="width=1100,height=750"><meta name="apple-mobile-web-app-capable" content="yes"></head>
+
+  <body style="display: none" class="loaded">
+
+    <section class="slides layout-widescreen">
+
+      <article class="current">
+        <h1>Fabric</h1>
+        <h3>Concurrency Control via Dependency Graphs</h3>
+        <h3>19 August 2017</h3>
+        
+          <div class="presenter">
+            
+  
+  <p>
+    Jeremy Khawaja
+  </p>
+  
+
+          </div>
+        
+      </article>
+
+  
+  
+      <article class="next">
+      
+        <h3>Project Link</h3>
+        <p class="link"><a href="https://github.com/JKhawaja/fabric" target="_blank">github.com/JKhawaja/fabric</a></p>
+      
+      </article>
+  
+  
+  
+      <article class="far-next">
+      
+        <h3>Program Behavior</h3>
+        
+  <ul>
+  
+    <li>All runtime behavior is still just as "real" as any other behavior. </li>
+  
+    <li>In other words: whether an update overwrites another update or not, it is still a relevant running program. </li>
+  
+    <li>There could someday be that one-in-a-million program that desires that the above-mentioned overwriting behavior (or any other commonly undesired behavior) be present for a purpose. </li>
+  
+    <li>Keeping with the above principle, fabric is not a framework, a model of concurrency control, that is so focused on forbidding behavior.</li>
+  
+    <li>Rather, fabric is a model/framework that helps us establish (with confidence) the behavior we desire for our system (and avoiding the behaviors we wish to avoid as well) as succinctly and precisely as possible.</li>
+  
+  </ul>
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Concurrent Data Structure System</h3>
+        
+  
+  <p>
+    <b>Def:</b> A <b>system</b> is a single data structure and the set of threads that access it.
+  </p>
+  
+
+<div class="image">
+  <img src="./Fabric_files/fabric_system.png">
+</div>
+
+  
+  <p>
+    (in the future, a system will be a <i>set</i> of data structures and <i>all</i> threads that access them)
+  </p>
+  
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>What is a CDS?</h3>
+        
+  <ul>
+  
+    <li><b>Def:</b> A Concurrent Data Structure (<b>CDS</b>) <i>for</i> Fabric is any data structure that can be represented via a graph or set-like structure.</li>
+  
+    <li><b>Note:</b> the graph does not have to be connected to any degree. </li>
+  
+    <li>This means that a CDS is valid if it can be represented (completely) as a set of disjoint nodes. Once a data structure has been mapped to a (disjoint) graph structure, we say it has been <i>fabricated</i> (i.e. it is "fabric-ready").</li>
+  
+    <li>It is also important to note that a CDS has a lifecycle. Or more per our discussion: a <i>lifetime</i>.</li>
+  
+  </ul>
+
+  
+  <div class="code"><pre>type CDS interface {
+    GenNodeID() int
+    GenEdgeID() int
+    ListNodes() NodeList
+    ListEdges() EdgeList
+}</pre></div>
+  
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h2>Concurrency Control via Dependency Graphs</h2>
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>World Volume Partitions</h3>
+        
+  
+  <p>
+    We begin by defining how we can partition access to our CDS: 
+  </p>
+  
+
+  <ul>
+  
+    <li>Spatial divisions (e.g. a thread updating a certain part of our CDS before another thread updating a different part of the CDS) and,</li>
+  
+    <li>Temporal divisions (e.g. a thread reading a part of a data structure before a different thread modifies it)</li>
+  
+  </ul>
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Spatial Virtualization</h3>
+        
+  
+  <p>
+    To divide access to our CDS we can always partition the CDS into sub-structures that we assign to different threads. This partitioning scheme is used in "fine-grained locking" concurrency control techniques. However, we can also go about utilizing something a little more powerful than just a partition.
+  </p>
+  
+
+  
+  <p>
+    <b>Def:</b> A <b>totality-unique</b> <b>set</b> is a subset of nodes and edges from our CDS which may share nodes and edges with other totality-unique sets but does not carry the <i>exact</i> same set of nodes and edges as any other totality-unique set.
+  </p>
+  
+
+  
+  <p>
+    <b>Def:</b> A <b>Unique-Independent</b> (UI) is an internally unique and externally totality-unique set of nodes and edges from the CDS. Thus, the name: "Unique" and "Independent"-ly processed.
+  </p>
+  
+
+  
+  <p>
+    <b>Def:</b> The set of all Unique-Independents "over" our CDS is called the <b>Spatial</b> <b>Virtualization</b> of our CDS
+  </p>
+  
+
+  
+  <p>
+    <b>Note:</b> Any spatial virtualization of our CDS must be a <b>covering</b> of our CDS i.e. all nodes and edges in the CDS must be addressed by at least one UI.
+  </p>
+  
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Using UIs</h3>
+        
+  <ul>
+  
+    <li>We can assign UIs to threads to scope their access permissions. </li>
+  
+    <li><b>Important:</b> A Thread can be assigned multiple UIs.</li>
+  
+    <li>Partial-Access Threads: assigned a UI (or set of UIs) that does not contain all the CDS nodes and edges</li>
+  
+    <li>Total-Access Threads: assigned a UI (or set of UIs) which contain all CDS nodes and edges</li>
+  
+  </ul>
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Temporal Virtualization</h3>
+        
+  
+  <p>
+    <b>Temporal</b> <b>Partitioning</b>: Ordering threads that have access to the same space (or sub-space) of the CDS.
+  </p>
+  
+
+  
+  <p>
+    Next, we need a way to know where and when a thread will wait for another thread to finish something. We can always lock the CDS or lock specific UIs, we can always just order threads in a FIFO access queue, etc. 
+  </p>
+  
+
+  
+  <p>
+    But all of these options are about one thing: <i>ordering</i>. Ordering access for threads can be expressed most generically (and yet precisely) with a <b>dependency</b> <b>graph</b>.
+  </p>
+  
+
+  
+  <p>
+    In the same way that UIs are a virtualization of accessing our CDS spatially: Dependency graphs are a virtualization of accessing the CDS (or a specific UI) temporally.
+  </p>
+  
+
+  
+  <p>
+    A dependency graph virtualizes time by allowing certain threads to access the UI or CDS concurrently while forcing some threads to be dependent on what other threads are doing before accessing the CDS or UI.
+  </p>
+  
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Why (disjoint) dependency graphs? </h3>
+        
+  
+  <p>
+    Mostly, because they are (disjoint) Directed Acyclic Graphs.
+  </p>
+  
+
+  
+  <p>
+    <b>Def:</b> A <b>cycle</b> in our graph is the ability to start at a node in the graph and traverse our graph (following the orientation of edges) such that we arrive back at the node we started at.
+  </p>
+  
+
+  
+  <p>
+    Why can't we have cycles? 
+  </p>
+  
+
+  
+  <p>
+    You can, but it would require <i>locking</i> to have any sort of guarantees and would thus eliminate the potential benefits of utilizing a dependency graph (at least for the threads in the cycle).
+  </p>
+  
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>A Dependency Graph for the System</h3>
+        
+  
+  <p>
+    Thus, far we have discussed spatial virtualization and assigning UIs to threads. We have also discussed ordering those threads in a dependency graph.
+  </p>
+  
+
+<div class="image">
+  <img src="./Fabric_files/dg_system.png">
+</div>
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Spatial Dependencies?</h3>
+        
+  
+  <p>
+    It is easy to see what a temporal dependency is from the previous picture. But, a question that arises is: is there such a thing as a spatial dependency?
+  </p>
+  
+
+<div class="image">
+  <img src="./Fabric_files/ui_dg.png">
+</div>
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Spatial Dependencies (continued ...)</h3>
+        
+  
+  <p>
+    A spatial dependency is strangely more complicated than it seems at first. For example, given an arbitrary thread dependency graph, if we assign a UI to a subset of the threads, and assign a UI that is a "dependency" of the first UI to a different (non-intersecting) subset of threads, then we can effectively say that all the threads assigned the first ("dependent") UI must wait (block) on the threads assigned the second ("dependency") UI.
+  </p>
+  
+
+  
+  <p>
+    But, this is not always a desired definition. And in fact, this is only <i>one</i> possible way to define a spatial virtualization.
+  </p>
+  
+
+  
+  <p>
+    Thus, we would like to have a simple but generalized definition that can cover all possible types of dependency relationships between two UIs.
+  </p>
+  
+
+  
+  <p>
+    <b>DEF:</b> A <b>spatial</b> <b>dependency</b> is the <i>total</i> <i>relationship</i> between all threads assigned one UI and all dependency (resp. dependent) threads assigned a different UI.
+  </p>
+  
+
+  
+  <p>
+    In other words, a spatial dependency is any thread assigned one UI having a dependency-dependent relationship with a thread assigned to some other UI.
+  </p>
+  
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Spatial Dependencies (continued ...)</h3>
+        
+  
+  <p>
+    <b>Note:</b> this means that in order to preserve the acyclic structure of our dependency graph we cannot allow a thread assigned a dependent UI to declare a thread assigned a dependency UI as a dependent.
+  </p>
+  
+
+  
+  <p>
+    This also means that threads should not be assigned new UIs once they have begun executing (nor have their currently assigned UIs removed).
+  </p>
+  
+
+  
+  <p>
+    However, spatial dependencies will <i>not</i> be <i>common</i> .
+  </p>
+  
+
+  
+  <p>
+    Spatial Virtualization will rarely be used for anything other than basic partitioning of the CDS for most use cases. And even if spatial virtualization is used, it is more than likely that a spatial dependency will not be necessary.
+  </p>
+  
+
+  
+  <p>
+    Thus, Spatial Dependencies (while a little more complex than they first appear to be) will only be used in more complex concurrency behavior requirements. 
+  </p>
+  
+
+  
+  <p>
+    But, they are there if and when you need them.
+  </p>
+  
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h2>Fabric's Approach</h2>
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>UIs in Fabric</h3>
+        
+  
+  <p>
+    A UI in Fabric is not <i>just</i> an object assigned to a goroutine. It essentially represents the <i>initial</i> (first) goroutine given access to a UI.
+  </p>
+  
+
+  <div class="code">
+
+
+<pre><span num="14">type UI interface {</span>
+<span num="15">    DGNode</span>
+<span num="16">    GetSection() Section</span>
+<span num="17">    IsUnique() bool  // specifies whether a UI is *strictly* unique or not (a UI will always have totality-uniqueness)</span>
+<span num="18">    IsVirtual() bool // specifies whether a UI is virtual or not</span>
+<span num="19">}</span>
+</pre>
+
+
+</div>
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Spatial Dependencies in Fabric</h3>
+        
+  
+  <p>
+    Even though (as was previously discussed) spatial dependencies are not necessarily simple things, Fabric makes it pretty simple to create them. 
+  </p>
+  
+
+  
+  <p>
+    More precisely, Fabric makes it simple to initialize them. Just add two UI nodes to the dependency graph and then create an (oriented) edge between them.
+  </p>
+  
+
+  
+  <p>
+    As per the previous discussion, this does not define the entirety of what that spatial dependency can be. Rather, it simply is a guarantee that a spatial dependency in some form will exist by creating a relationship between the first goroutine given access to the dependent UI and the first goroutine given access to the dependency UI.
+  </p>
+  
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>UI Disjoint(ed) Dependency Graphs (DDAG)</h3>
+        
+  
+  <p>
+    <b>Def:</b> The <b>Minimal</b> <b>Spatial</b> <b>Dependency</b> <b>Graph</b> is the minimal structure between initial goroutines required to guarantee the existence of all the defined spatial dependencies.
+  </p>
+  
+
+<div class="image">
+  <img src="./Fabric_files/ui_ddag.png">
+</div>
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Temporal Nodes</h3>
+        
+  
+  <p>
+    A temporal node represents any goroutine assigned a UI beyond the initial goroutine assigned that UI.
+  </p>
+  
+
+  
+  <p>
+    <b>Note:</b> goroutines that are assigned Temporal Nodes are often goroutines that will exist before and after the lifetime of the CDS.
+  </p>
+  
+
+  <div class="code">
+
+
+<pre><span num="5">type Temporal interface {</span>
+<span num="6">    DGNode</span>
+<span num="7">    GetRoot() UI</span>
+<span num="8">    IsVirtual() bool</span>
+<span num="9">}</span>
+</pre>
+
+
+</div>
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Temporal Sub-Graphs</h3>
+        
+  
+  <p>
+    Every UI node (the first goroutine given access to that UI) is the root of a semi-lattice of Temporal Nodes (goroutines given access to the same UI after the first goroutine).
+  </p>
+  
+
+<div class="image">
+  <img src="./Fabric_files/temporal.png">
+</div>
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Partial Spatial Dependency (PSD)</h3>
+        
+  
+  <p>
+    It is also simple to define a spatial dependency without specifying a UI dependency:
+  </p>
+  
+
+<div class="image">
+  <img src="./Fabric_files/psd.png">
+</div>
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>PSD (continued ...)</h3>
+        
+  
+  <p>
+    A Partial Spatial dependency is any temporal node assigned to one UI having a dependency relationship with a temporal node assigned to another UI.
+  </p>
+  
+
+  
+  <p>
+    Although, it is recommended to specify that the two UIs will have a spatial dependency ahead of time i.e. create a dependency relationship between the initial goroutines.
+  </p>
+  
+
+  
+  <p>
+    The reason why it is recommended to format your UI dependencies with a Minimal Dependency Graph between the initial goroutines is because this can be used to check that the dependency graph does not have cyclic behavior anywhere.
+  </p>
+  
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h2>Secondary Structures</h2>
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Secondary UIs</h3>
+        
+  
+  <p>
+    <b>Def:</b> A Virtual Unique-Independent (<b>VUI</b>) is a UI that will exist for only part of the lifetime of the CDS and does not have to have totality-uniqueness (which is why we call them Virtual -- as they are a "virtualization" of spatial virtualization).
+  </p>
+  
+
+  <div class="code">
+
+
+<pre><span num="14">type UI interface {</span>
+<span num="15">    DGNode</span>
+<span num="16">    GetSection() Section</span>
+<span num="17">    IsUnique() bool  // specifies whether a UI is *strictly* unique or not (a UI will always have totality-uniqueness)</span>
+<span num="18">    IsVirtual() bool // specifies whether a UI is virtual or not</span>
+<span num="19">}</span>
+</pre>
+
+
+</div>
+
+  <ul>
+  
+    <li><code>IsVirtual()</code> should return <code>true</code></li>
+  
+  </ul>
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>VUIs in the MDG</h3>
+        
+  
+  <p>
+    VUIs can be added to the Minimal Dependency Graph.
+  </p>
+  
+
+<div class="image">
+  <img src="./Fabric_files/vui_ddag.png">
+</div>
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>VUIs (continued ...)</h3>
+        
+  
+  <p>
+    The rules for adding a VUI to the Minimal (Spatial) Dependency Graph is the following:
+  </p>
+  
+
+  <ul>
+  
+    <li>A VUI must have a lifetime shorter than all of its VUI dependents</li>
+  
+    <li>A VUI must have a lifetime longer than all of its VUI dependencies</li>
+  
+    <li>VUIs are allowed to have UIs as dependencies (but be careful as to not cause any problems by removing the VUI to early)</li>
+  
+  </ul>
+
+  
+  <p>
+    VUIs can be assigned to any node at anytime as they are not part of the main spatial virtualization. The only important aspect of them is their lifetimes following the above rules.
+  </p>
+  
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Secondary Temporal Nodes</h3>
+        
+  
+  <p>
+    Just like VUIs, fabric also offers temporary Temporal nodes (used for "virtual spawning" i.e. for creating a new temporary node from inside another nodes runtime).
+  </p>
+  
+
+  
+  <p>
+    <b>Def:</b> A <b>Virtual</b> <b>Temporal</b> node is a Temporal node that has a lifetime shorter than the CDS, is assigned a UI or VUI, and is placed in the main global DDAG.
+  </p>
+  
+
+  <div class="code">
+
+
+<pre><span num="5">type Temporal interface {</span>
+<span num="6">    DGNode</span>
+<span num="7">    GetRoot() UI</span>
+<span num="8">    IsVirtual() bool</span>
+<span num="9">}</span>
+</pre>
+
+
+</div>
+
+  <ul>
+  
+    <li><code>IsVirtual()</code> should return <code>true</code></li>
+  
+  </ul>
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Virtual Temporals (continued ...)</h3>
+        
+  
+  <p>
+    A Virtual Temporal node must follow the same rules as VUIs when being placed and removed from the dependency graph:
+  </p>
+  
+
+  <ul>
+  
+    <li>A VT must have a lifetime shorter than all of its VT dependents</li>
+  
+    <li>A VT must have a lifetime longer than all of its VT dependencies</li>
+  
+    <li>VTs are allowed to have Temporals as dependencies (but be careful as to not cause any problems by removing the VT to early)</li>
+  
+    <li>A VT <i>should</i> have a shorter lifetime than its assigned VUI (if it is assigned a VUI)</li>
+  
+  </ul>
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h2>Independent Structures</h2>
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Independent Dependency Graphs</h3>
+        
+  
+  <p>
+    <b>Def:</b> A Virtual Dependency Graph (<b>VDG</b>) is a dependency graph that is independent from the main global ddag i.e. all goroutines execute independent of the global ddag goroutines and have <i>zero</i> dependency relationships with any of the goroutines in the global ddag. A virtual dependency graph must always fully execute all goroutines within the lifetime of the CDS.
+  </p>
+  
+
+  
+  <p>
+    A system can have as many dependency graphs as it wants. But, it is only allowed one primary dependency graph. All other independently executing dependency graphs are VDGs.
+  </p>
+  
+
+  
+  <p>
+    It is good practice for VDG nodes to only be removed from the VDG by the goroutine that owns (is associated with) them.
+  </p>
+  
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>VDGs (continued ...)</h3>
+        
+  
+  <p>
+    A VDG is composed of nodes that are simply called `Virtual`s in the fabric code.
+  </p>
+  
+
+  <div class="code">
+
+
+<pre><span num="14">type Virtual interface {</span>
+<span num="15">    DGNode</span>
+<span num="16">    Start()        // tells the node to begin execution (usually by flipping a 'Started' boolean -- can also signal to dependents that it has started)</span>
+<span num="17">    Started() bool // specifies whether a node has started execution or not</span>
+<span num="18">    IsRoot() bool  // specifies whether VDG node is root node or not</span>
+<span num="19">    Subspace() UI  // the (V)UI that the Virtual node is associated to</span>
+<span num="20">}</span>
+</pre>
+
+
+</div>
+
+  
+  <p>
+    Note that the <code>Started()</code> (and <code>Start()</code>) method is there to enforce when a Virtual node has started so that new Virtual nodes cannot be added as dependencies to it. 
+  </p>
+  
+
+  
+  <p>
+    Since virtual nodes often have a relatively short lifetime (i.e. are often single access procedure operations), specifying when the node has started is useful for <code>Order()</code> methods in POSETs to not add dependencies to it.
+  </p>
+  
+
+  
+  <p>
+    UI nodes and Temporal nodes do not need this because they are expected to check for dependency signals (which will automatically show new dependencies) before executing an access procedure every time they want to access the CDS.
+  </p>
+  
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>POSETs</h3>
+        
+  
+  <p>
+    Fabric also offers a wrapping interface that can be used to "wrap" a dependency graph or VDG with in order to specify an ordering algorithm for new nodes.
+  </p>
+  
+
+  <div class="code">
+
+
+<pre><span num="4">type Poset interface {</span>
+<span num="5">    // Graph should return a pointer to the graph that our POSET object is "wrapping"</span>
+<span num="6">    Graph() *Graph</span>
+<span num="7">    // GenerateGraph should take a list of nodes and order them according to the Order() method and return a new Graph</span>
+<span num="8">    GenerateGraph([]DGNode) *Graph</span>
+<span num="9">    // Order should be a method that determines what dependents and what</span>
+<span num="10">    // dependencies to assign a node in the wrapped Graph i.e. it determines</span>
+<span num="11">    // what edges to make for the node in the Graph.</span>
+<span num="12">    // Order returns the location of the DGnode inside the Graph</span>
+<span num="13">    Order(DGNode) error</span>
+<span num="14">}</span>
+</pre>
+
+
+</div>
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h2>Fine-Grained Blocking</h2>
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Signals</h3>
+        
+  
+  <p>
+    Nodes in our DDAG can send signals to each other that other goroutines can either ignore or utilize to choose what actions they would like to perform.
+  </p>
+  
+
+  
+  <p>
+    Signals are based on the following three values:
+  </p>
+  
+
+  <ul>
+  
+    <li>Access Procedure Type (by id)</li>
+  
+    <li>Signal Value</li>
+  
+    <li>UI being accessed</li>
+  
+  </ul>
+
+  
+  <p>
+    A goroutine can choose to wait (or not wait) based on a specific signal being received or until a specific signal is received, etc. This property of the dependency graph is what we call: <b>fine-grained</b> <b>blocking</b>.
+  </p>
+  
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Signaling with Spatial Dependencies</h3>
+        
+  
+  <p>
+    There are two ways that we can signal with spatial dependencies:
+  </p>
+  
+
+  
+  <p>
+    1. (Passing the Signal Up) Have the Temporal goroutine in the dependency UI cause the UI node to signal its dependent UI node. However, this only allows the initial UI goroutine to react to actions from dependency UI temporal goroutines.
+<br>
+
+    2. (Passing the Signal Over) Have the Temporal node assigned a dependency UI, signal another Temporal node assigned a dependent UI.
+  </p>
+  
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Blocking With Spatial Dependencies</h3>
+        
+  
+  <p>
+    Since, a spatial dependency is defined by the total relationships between goroutines (temporal nodes) assigned to the two UIs in the spatial dependency relationship:
+  </p>
+  
+
+  <ul>
+  
+    <li>This can be a <i>full-dependency</i> (all goroutines assigned to one UI have all goroutines assigned to a dependency UI as dependencies) or a <i>partial-dependency</i> (only some goroutines assigned to one UI have some goroutines assigned to a dependency UI as dependencies)</li>
+  
+    <li>The spatial dependency can also be <i>total-blocking</i> (all goroutines assigned to one UI cannot do anything until all goroutines assigned to a dependency UI have finished) or any varying degree of a <i>partial-block</i> (defined by how dependent goroutines assigned to one UI respond to dependency goroutines assigned to a dependency UI)</li>
+  
+    <li>This, of course, all embraces the fundamental pattern of "fine-grained blocking"</li>
+  
+  </ul>
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Signaling in VDGs</h3>
+        
+  
+  <p>
+    A goroutine only has to be a temporary dependency of another goroutine up to a particular signal from a particular access procedure. For example, if a goroutine has multiple access procedures it is performing, and it signals for all of them, then a dependent node can dismiss it as a dependency once it has received a specific signal from the dependent node. 
+  </p>
+  
+
+  
+  <p>
+    NOTE: can this cause potential race conditions on the signaling maps? Yes, but it is non-critical if appropriate signal handling has been written for each goroutine. (may be finding a way to help avoid this potential problem in the future ...)
+  </p>
+  
+
+      
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Wrap-Up</h3>
+        
+  
+  <p>
+    <i>Any</i> goroutine can do things outside of our CDS system. <i>When</i> it wants to access the CDS, it must correspond with our system to the degree that it will basically always run the same routine:
+  </p>
+  
+
+  
+  <p>
+    1. <code>SignalCheck()</code> on its current dependencies and handle those signals accordingly
+<br>
+
+    2. Run some procedure or sequence of procedures on the CDS and <code>Signal()</code> its dependents accordingly
+<br>
+
+    3. Then it can do whatever it wants outside of the CDS system (perhaps going to do things to other CDSs)
+  </p>
+  
+
+  
+  <p>
+    <b>NOTE:</b> The above <code>SignalCheck()</code> routine is the <b>basis</b> of our Fine-Grained Blocking philosophy. It determines when and what a goroutine accessing our CDS will do based on what its dependencies have signaled (this can range from a total-block to a partial-block, etc.)
+  </p>
+  
+
+      
+      </article>
+  
+  
+
+      <article>
+        <h3>Thank you</h3>
+        
+          <div class="presenter">
+            
+  
+  <p>
+    Jeremy Khawaja
+  </p>
+  
+<p class="link"><a href="https://github.com/JKhawaja" target="_blank">https://github.com/JKhawaja</a></p>
+          </div>
+        
+      </article>
+
+    <div class="slide-area" id="prev-slide-area"></div><div class="slide-area" id="next-slide-area"></div></section>
+
+    <div id="help" style="display: none;">
+      Use the left and right arrow keys or click the left and right
+      edges of the page to navigate between slides.<br>
+      (Press 'H' or navigate to hide this message.)
+    </div>
+
+    
+    <script src="./Fabric_files/play.js.download"></script>
+    
+
+    <script>
+      (function() {
+        
+        if (window["location"] && window["location"]["hostname"] == "talks.golang.org") {
+          var ga = document.createElement("script"); ga.type = "text/javascript"; ga.async = true;
+          ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";
+          var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ga, s);
+        }
+      })();
+    </script>
+  
+
+<link rel="stylesheet" type="text/css" href="./Fabric_files/css"><link rel="stylesheet" type="text/css" href="./Fabric_files/styles.css"></body></html>
