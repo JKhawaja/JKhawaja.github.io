@@ -6,7 +6,7 @@
     <script>
       var notesEnabled =  false ;
     </script>
-    <script src="./fabric_files/slides.js.download"></script>
+    <script src="./Fabric_files/slides.js.download"></script>
 
     
 
@@ -95,7 +95,7 @@
   
 
 <div class="image">
-  <img src="./fabric_files/fabric_system.png">
+  <img src="./Fabric_files/fabric_system.png">
 </div>
 
   
@@ -188,7 +188,7 @@
 
   
   <p>
-    <b>Def:</b> A <b>Unique-Independent</b> is a totality-unique set of nodes and edges from the CDS
+    <b>Def:</b> A <b>Unique-Independent</b> (UI) is an internally unique and externally totality-unique set of nodes and edges from the CDS. Thus, the name: "Unique" and "Independent"-ly processed.
   </p>
   
 
@@ -313,7 +313,7 @@
   
 
 <div class="image">
-  <img src="./fabric_files/dg_system.png">
+  <img src="./Fabric_files/dg_system.png">
 </div>
 
       
@@ -327,12 +327,12 @@
         
   
   <p>
-    It is easy to see what a temporal dependency from the previous picture. But, a question that arises is: is there such a thing as a spatial dependency?
+    It is easy to see what a temporal dependency is from the previous picture. But, a question that arises is: is there such a thing as a spatial dependency?
   </p>
   
 
 <div class="image">
-  <img src="./fabric_files/ui_dg.png">
+  <img src="./Fabric_files/ui_dg.png">
 </div>
 
       
@@ -370,7 +370,7 @@
 
   
   <p>
-    In other words, a spatial dependency is any temporal node assigned one UI having a dependency-dependent relationship with a temporal assigned to some other UI.
+    In other words, a spatial dependency is any thread assigned one UI having a dependency-dependent relationship with a thread assigned to some other UI.
   </p>
   
 
@@ -438,7 +438,7 @@
         
   
   <p>
-    A UI in Fabric is not an object assigned to a goroutine. It actually represents the initial (first) goroutine given access to a UI.
+    A UI in Fabric is not <i>just</i> an object assigned to a goroutine. It essentially represents the <i>initial</i> (first) goroutine given access to a UI.
   </p>
   
 
@@ -467,7 +467,7 @@
         
   
   <p>
-    Even though (as was previously discussed) spatial dependencies are not necessarily simple things. Fabric makes it pretty simple to create them. 
+    Even though (as was previously discussed) spatial dependencies are not necessarily simple things, Fabric makes it pretty simple to create them. 
   </p>
   
 
@@ -499,7 +499,7 @@
   
 
 <div class="image">
-  <img src="./fabric_files/ui_ddag.png">
+  <img src="./Fabric_files/ui_ddag.png">
 </div>
 
       
@@ -552,7 +552,7 @@
   
 
 <div class="image">
-  <img src="./fabric_files/temporal.png">
+  <img src="./Fabric_files/temporal.png">
 </div>
 
       
@@ -571,7 +571,7 @@
   
 
 <div class="image">
-  <img src="./fabric_files/psd.png">
+  <img src="./Fabric_files/psd.png">
 </div>
 
       
@@ -660,7 +660,7 @@
   
 
 <div class="image">
-  <img src="./fabric_files/vui_ddag.png">
+  <img src="./Fabric_files/vui_ddag.png">
 </div>
 
       
@@ -983,7 +983,13 @@
         
   
   <p>
-    A goroutine only has to be a temporary dependency of another goroutine up to a particular signal from a particular access procedure. For example, if a goroutine has multiple access procedures it is performing, and it signals for all of them, then a dependent node can dismiss it as a dependency once it has received a specific signal from the dependent node. (NOTE: can this cause race conditions on the signaling maps? In a sense, but it is non-critical if appropriate signal handling has been written for each goroutine).
+    A goroutine only has to be a temporary dependency of another goroutine up to a particular signal from a particular access procedure. For example, if a goroutine has multiple access procedures it is performing, and it signals for all of them, then a dependent node can dismiss it as a dependency once it has received a specific signal from the dependent node. 
+  </p>
+  
+
+  
+  <p>
+    NOTE: can this cause potential race conditions on the signaling maps? Yes, but it is non-critical if appropriate signal handling has been written for each goroutine. (may be finding a way to help avoid this potential problem in the future ...)
   </p>
   
 
@@ -1049,7 +1055,7 @@
     </div>
 
     
-    <script src="./fabric_files/play.js.download"></script>
+    <script src="./Fabric_files/play.js.download"></script>
     
 
     <script>
@@ -1064,4 +1070,4 @@
     </script>
   
 
-<link rel="stylesheet" type="text/css" href="./fabric_files/css"><link rel="stylesheet" type="text/css" href="./fabric_files/styles.css"></body></html>
+<link rel="stylesheet" type="text/css" href="./Fabric_files/css"><link rel="stylesheet" type="text/css" href="./Fabric_files/styles.css"></body></html>
