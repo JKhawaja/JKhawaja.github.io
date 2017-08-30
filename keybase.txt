@@ -1,0 +1,55 @@
+==================================================================
+https://keybase.io/jeremyk
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of http://jeremykhawaja.com
+  * I am jeremyk (https://keybase.io/jeremyk) on keybase.
+  * I have a public key ASDGhMEh8whtYa84qr4Fsmat2ZMyNKhgaPSco4jTtX7wego
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "0120c684c121f3086d61af38aabe05b266add9933234a86068f49ca388d3b57ef07a0a",
+      "host": "keybase.io",
+      "kid": "0120c684c121f3086d61af38aabe05b266add9933234a86068f49ca388d3b57ef07a0a",
+      "uid": "82b8979551198cc265dc6901b65b1f19",
+      "username": "jeremyk"
+    },
+    "merkle_root": {
+      "ctime": 1504086699,
+      "hash": "d925ae9577487fd2800c9e5271bc15d0e6fccf2e08124aa493db8912a177dd6258f2d617a61487d7942dfecce1c490933e92ff9a8fc107d8b2ef8158d701161a",
+      "hash_meta": "6df8777feb98d886ff8b48547f2be4b69d4f445c264ab2a06b15468ca49fe88a",
+      "seqno": 1357143
+    },
+    "service": {
+      "hostname": "jeremykhawaja.com",
+      "protocol": "http:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "1.0.28"
+  },
+  "ctime": 1504086716,
+  "expire_in": 504576000,
+  "prev": "a7db1d940fbe5a50a4e99cdee7cbdc9d69619e259681b496f1d6dfb982286335",
+  "seqno": 7,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgxoTBIfMIbWGvOKq+BbJmrdmTMjSoYGj0nKOI07V+8HoKp3BheWxvYWTFA0d7ImJvZHkiOnsia2V5Ijp7ImVsZGVzdF9raWQiOiIwMTIwYzY4NGMxMjFmMzA4NmQ2MWFmMzhhYWJlMDViMjY2YWRkOTkzMzIzNGE4NjA2OGY0OWNhMzg4ZDNiNTdlZjA3YTBhIiwiaG9zdCI6ImtleWJhc2UuaW8iLCJraWQiOiIwMTIwYzY4NGMxMjFmMzA4NmQ2MWFmMzhhYWJlMDViMjY2YWRkOTkzMzIzNGE4NjA2OGY0OWNhMzg4ZDNiNTdlZjA3YTBhIiwidWlkIjoiODJiODk3OTU1MTE5OGNjMjY1ZGM2OTAxYjY1YjFmMTkiLCJ1c2VybmFtZSI6ImplcmVteWsifSwibWVya2xlX3Jvb3QiOnsiY3RpbWUiOjE1MDQwODY2OTksImhhc2giOiJkOTI1YWU5NTc3NDg3ZmQyODAwYzllNTI3MWJjMTVkMGU2ZmNjZjJlMDgxMjRhYTQ5M2RiODkxMmExNzdkZDYyNThmMmQ2MTdhNjE0ODdkNzk0MmRmZWNjZTFjNDkwOTMzZTkyZmY5YThmYzEwN2Q4YjJlZjgxNThkNzAxMTYxYSIsImhhc2hfbWV0YSI6IjZkZjg3NzdmZWI5OGQ4ODZmZjhiNDg1NDdmMmJlNGI2OWQ0ZjQ0NWMyNjRhYjJhMDZiMTU0NjhjYTQ5ZmU4OGEiLCJzZXFubyI6MTM1NzE0M30sInNlcnZpY2UiOnsiaG9zdG5hbWUiOiJqZXJlbXlraGF3YWphLmNvbSIsInByb3RvY29sIjoiaHR0cDoifSwidHlwZSI6IndlYl9zZXJ2aWNlX2JpbmRpbmciLCJ2ZXJzaW9uIjoxfSwiY2xpZW50Ijp7Im5hbWUiOiJrZXliYXNlLmlvIGdvIGNsaWVudCIsInZlcnNpb24iOiIxLjAuMjgifSwiY3RpbWUiOjE1MDQwODY3MTYsImV4cGlyZV9pbiI6NTA0NTc2MDAwLCJwcmV2IjoiYTdkYjFkOTQwZmJlNWE1MGE0ZTk5Y2RlZTdjYmRjOWQ2OTYxOWUyNTk2ODFiNDk2ZjFkNmRmYjk4MjI4NjMzNSIsInNlcW5vIjo3LCJ0YWciOiJzaWduYXR1cmUifaNzaWfEQMzGBXCiFU6V1IdzrfyqZL87sPvhSNzIeGbNYDBUdViuMMjIr5N/MZXZPt5UAxAdnFVvW3dpfbe6vlYOoTgpFQ6oc2lnX3R5cGUgpGhhc2iCpHR5cGUIpXZhbHVlxCAATDghw6qS+PKpX/H4GR4JC1sgrM5V9nCUJ0HX9DKKO6N0YWfNAgKndmVyc2lvbgE=
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/jeremyk
+
+==================================================================
