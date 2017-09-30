@@ -1,5 +1,3 @@
-## Hash Collisions in Dropbox Passwords? No Problem.
-
 Recently, Dropbox posted their [new process for securing user's passwords](https://blogs.dropbox.com/tech/2016/09/how-dropbox-securely-stores-your-passwords/). A critical reader might realize that SHA512-ing all passwords of arbitrary length could potentially lead to hash collisions. Well, they would be correct. But, why would that be a security concern? Hash collisions basically equate to: every password will now have multiple qualifying text strings. In other words: an attacker has an increased number of possible text strings that they can guess that the system will accept as equivalent to a user's password (after they are hashed).
 
 Yikes! That sounds terrible! In fact, some simple mathematics shows us: if we allow passwords up to 256 bytes in length over the same alphabet of characters that the SHA512 algorithm will hash your text too, then every user's password could have as many as 191 other pieces of text (besides their actual password) that the system will accept as being their password! So, how has Dropbox not been pwned yet?

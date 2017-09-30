@@ -1,5 +1,3 @@
-# Messengers Pattern - Asynchronous Concurrency in Golang
-
 Channels can be a rather stubborn concurrency primitive in Go when first working with them. We first give a quick review of using channels and the blocking scenarios they create, then we move on to patterns for asynchronous concurrency in Go focusing in on the "messengers" pattern.
 
 ## Channels
@@ -39,6 +37,6 @@ It's almost like creating two separate societal classes of goroutines. So, treat
 
 ## Example
 
-Run the example here: https://play.golang.org/p/2-37mqZFCQ
+Run the example here: (https://play.golang.org/p/2-37mqZFCQ)[https://play.golang.org/p/2-37mqZFCQ]
 
-Get the example code here: https://gist.github.com/JKhawaja/8377bcd5d39062acf08ca2d4605a263c 
+Get the example code here: (https://gist.github.com/JKhawaja/8377bcd5d39062acf08ca2d4605a263c)[https://gist.github.com/JKhawaja/8377bcd5d39062acf08ca2d4605a263c]

@@ -1,5 +1,3 @@
-# Version-Driven-Development: Testing
-
 An approach to testing and test suite construction and management via a Version-Driven development style. What is written is not a formalized pattern, or something that is solid. The ideas here can be considered fluid.
 
 The core questions to premise our discussion is in regards to general application projects and test suite creation and management for those projects:
@@ -186,3 +184,4 @@ type Application struct{
 }
 ```
 
+Simple test suite management package coming soon ...
