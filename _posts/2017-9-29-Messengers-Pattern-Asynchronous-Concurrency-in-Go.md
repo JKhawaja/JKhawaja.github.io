@@ -31,7 +31,7 @@ Channels can be a rather stubborn concurrency primitive in Go when first working
 
 ## Messengers Pattern
 
-The core idea behind the messengers pattern is to have `worker` goroutines and `messenger` goroutines. The messenger goroutines can be based on messenger objects that are used an re-used from a messengers `sync.Pool`. In this way, any worker can send a message to another go-routine asynchronously via a messenger rather than directly on a channel.
+The core idea behind the messengers pattern is to have `worker` goroutines and `messenger` goroutines. The messenger goroutines can be based on messenger objects that are used and re-used from a messengers `sync.Pool`. In this way, any worker can send a message to another go-routine asynchronously via a messenger rather than directly on a channel.
 
 It's almost like creating two separate societal classes of goroutines. So, treat your messengers well, else they revolt and crash the system.
 
