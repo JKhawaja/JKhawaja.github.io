@@ -23,7 +23,7 @@ type Array struct{
 }
 ```
 
-So, the basic relationship between a slice and an array is: slices are references to an array. The catch is: since slices are structurally mutable we can actually change *which* array a slice is referencing. We can mutate how much of an array a Slice references. But, the one thing we cannot mutate (because Go is statically-typed) is the Type of the arrays that a Slice is allowed to reference.
+So, the basic relationship between a slice and an array is: slices are references to an array. The catch is: since slices are structurally mutable we can actually change *which* array a slice is referencing. We can mutate how much of an array a Slice references. But, the one thing we cannot mutate (because Go is statically-typed) is the Type of the arrays that a slice is allowed to reference.
 
 ## Neat Slice Tricks
 
@@ -31,9 +31,9 @@ We can manipulate slices with built-in functions in Go. Take for example: `appen
 
 Append is weird. Very weird. Check out some examples:
 
-- https://play.golang.org/p/LxdGYAJhEV
-- https://play.golang.org/p/ZjDBuFTREK
-- https://play.golang.org/p/578ujt2-Bp
+- [https://play.golang.org/p/LxdGYAJhEV](https://play.golang.org/p/LxdGYAJhEV)
+- [https://play.golang.org/p/ZjDBuFTREK](https://play.golang.org/p/ZjDBuFTREK)
+- [https://play.golang.org/p/578ujt2-Bp](https://play.golang.org/p/578ujt2-Bp)
 
 Roughly: 
 
@@ -45,8 +45,8 @@ Roughly:
 
 We can find plenty of other neat tricks for manipulating slices using the built-in `append` and `copy` functions:
 
-- here: https://github.com/golang/go/wiki/SliceTricks
-- and here: https://blog.golang.org/slices
+- here: [https://github.com/golang/go/wiki/SliceTricks](https://github.com/golang/go/wiki/SliceTricks)
+- and here: [https://blog.golang.org/slices](https://blog.golang.org/slices)
 
 But, if you are like me ... something just doesn't feel quite right about using "neat hacks, bruh" to manipulate slices, think in terms of, write and read code with, etc.
 
@@ -250,8 +250,8 @@ func Extend(slice []int, element int) []int {
 
 What, we want to do now is rewrite a dynamic allocation procedure *in terms of our algebra of slices*.
 
-- Run the example code here: https://play.golang.org/p/ParBNJKdZn
-- See the example code here: https://gist.github.com/JKhawaja/d3fa5ca91ef0e41df3c5a3e4b634e913
+- Run the example code here: [https://play.golang.org/p/ParBNJKdZn](https://play.golang.org/p/ParBNJKdZn)
+- See the example code here: [https://gist.github.com/JKhawaja/d3fa5ca91ef0e41df3c5a3e4b634e913](https://gist.github.com/JKhawaja/d3fa5ca91ef0e41df3c5a3e4b634e913)
 
 ## Interesting sidepoint: Arrays as Vectors
 
