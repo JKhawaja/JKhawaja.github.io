@@ -54,9 +54,9 @@ Perhaps, we can find a slightly more structured way to think of slices and array
 
 ## The Combinatorics of Slices
 
-Unsurprisingly, there is also a combinatoric relationship between slices and arrays defined by the number of total possible (and valid) slices that can be defined over an array (of length n).
+Unsurprisingly, there is also a combinatoric relationship between slices and arrays defined by the number of total possible (and valid) slices that can be defined over an array (of capacity n).
 
-What we find is that for an array of length n, the total number of slices is equal to the binomial coefficient `(n+1 choose 2)`. In other words, it is always equal to a [triangular number](https://en.wikipedia.org/wiki/Triangular_number).
+What we find is that for an array of capacity n, the total number of slices is equal to the binomial coefficient `(n+1 choose 2)`. In other words, it is always equal to a [triangular number](https://en.wikipedia.org/wiki/Triangular_number).
 
 Here are the first six triangular numbers represented by pictures (taken from Wikipedia).
 
@@ -64,7 +64,7 @@ Here are the first six triangular numbers represented by pictures (taken from Wi
 
 We can use the above image of triangles to make sense of why triangular numbers are directly related to the total number of possible slices over an array: 
 
-- Each triangle represents the array of length n (where n is the number of nodes in the bottom row of the triangle)
+- Each triangle represents the array of capacity n (where n is the number of nodes in the bottom row of the triangle)
 - Each node in a triangle represents a single possible valid slice over that array.
 - The top node in the triangle represents the slice that has access to all elements in the array
 - The bottom nodes in the triangle represent slices with access to only one element of the array.
@@ -81,15 +81,15 @@ Previously we talked about "neat tricks" that *can* be useful using `append` and
 
 ### Ring of Arrays (of Type T) `[c ∈ Cap]T{}`
 
-First, we can define the Ring of Arrays (of Type T) as being based on the capacity of the Array. This makes the ring isomorphic to the ring of Integers.
+First, we can define the `Ring of Arrays (of Type T)` as being based on the capacity of the array. This makes the ring isomorphic to the ring of Integers.
 
 - [Axioms](https://en.wikipedia.org/wiki/Ring_(mathematics)#Definition) for a ring of arrays R.
-    + (Addition of Capacities) ∀ a,b ∈ R: a + b = c ∈ R
+    + (Addition of Capacities) ∀ a,b ∈ R: (a + b) ∈ R, this is closure under addition
     + (Commutative) ∀a,b ∈ R: a + b = b + a
     + (Associative) ∀a,b,c ∈ R: a + (b + c) = (a + b) + c
     + (Identity) ∃ id ∈ R → ∀a ∈ R: a + id = a, this is the 0 capacity
     + (Inverses) ∀a ∈ R: ∃ -a ∈ R → a + -a = id
-    + (Multiplication of Capacities) ∀ a,b ∈ R: a * b = c ∈ R
+    + (Multiplication of Capacities) ∀ a,b ∈ R: (a * b) ∈ R, this is closure under multiplication
     + Multiplication is associative
     + Multiplication has an identity: capacity 1
     + Multiplication is distributive (left and right) with relation to addition
