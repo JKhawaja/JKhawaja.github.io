@@ -250,8 +250,10 @@ func Extend(slice []int, element int) []int {
 
 What, we want to do now is rewrite a dynamic allocation procedure *in terms of our algebra of slices*.
 
-- Run the example code here: [https://play.golang.org/p/ParBNJKdZn](https://play.golang.org/p/ParBNJKdZn)
+- Run the example code here: [https://play.golang.org/p/4NzvJnFO2m](https://play.golang.org/p/4NzvJnFO2m)
 - See the example code here: [https://gist.github.com/JKhawaja/d3fa5ca91ef0e41df3c5a3e4b634e913](https://gist.github.com/JKhawaja/d3fa5ca91ef0e41df3c5a3e4b634e913)
+
+You can see our new `Extend` method (function) on [line 163](https://gist.github.com/JKhawaja/d3fa5ca91ef0e41df3c5a3e4b634e913#file-slice_algebra-go-L163).
 
 ## Interesting sidepoint: Arrays as Vectors
 
