@@ -168,9 +168,9 @@ This means that our symmetric differentiation alone will not suffice. Instead we
 
 > (r₁ ⋅ x) ∘ (r₂ ⋅ y) = (r₁ + r₂) ⋅ (x ∘ y)
 > 
-> where r₁, r₂ ∈ R, and x, y ∈ M
+> where r₁, r₂ ∈ R (are capacities), and x, y ∈ M (are slices in our module)
 
-But, how can we verify now that two slices are on our module. Well, each module must have something called: a `base`. The `base` is the maximal length a slice in our module is allowed to have.
+But, how can we verify now that two slices are on our module. Well, each module must have something called: a `base`. The `base` is the maximal length (length of the segment) a slice in our module is allowed to have.
 
 Thus, we say that the `base` of a module is equivalent to the capacity (length of bottom row) of the slice triangle that is it's "basis". This determines the maximum length our slice is allowed to have to be considered a part of our module.
 
