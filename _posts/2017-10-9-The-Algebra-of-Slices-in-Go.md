@@ -19,7 +19,7 @@ type Slice struct{
 type Array struct{
     Cardinality int // immutable -- number of elements
     Type string // immutable -- element type
-    Location [1]uintptr //immutable -- address of first element (index 0)
+    Location uintptr //immutable -- address of first element (index 0)
 }
 ```
 
