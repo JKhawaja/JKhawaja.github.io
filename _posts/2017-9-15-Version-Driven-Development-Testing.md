@@ -21,17 +21,17 @@ Tests that apply to internal packages for our application are "Intra-" tests. An
 
 We are testing for the existence of or the lacking of certain properties.
 
-- `Unitary`: properties of a single code object (where code object is something like e.g. a function)
+- `Unitary`: properties of a single code object (where code object is something like e.g., a function)
     + obviously, these tests always will be "intra-"
     + Unitary is not necessarily synonymous with the commonly known "Unit" test (discussed later). Although, the two are likely to be heavily correlated in a test suite.
-- `Compositional`: properties of a composition of code objects (e.g.  a test that calls a sequence of code objects in a particular order)
+- `Compositional`: properties of a composition of code objects (e.g.,  a test that calls a sequence of code objects in a particular order)
     + `Intra-Compositional`: code objects from the same internal package composed.
     + `Inter-Compositional`: code objects from different packages composed.
 - `Relational`: properties of the relationship between code objects
     + `Intra-Relational` properties for relationships between two code objects inside a single internal package, and `Inter-Relational` properties for two code objects located in different internal packages.
-    + `Differential`: properties of a relationship that define how two code objects are different (e.g. a test for redundancy)
-    + `Intersective`: properties of a relationship that define how two code objects must remain similar (e.g. to guarantee that they agree on certain values)
-        * `Indempotence`: is an example of an intersective property of the relationship between a code object and any n-self-composition of itself.
+    + `Differential`: properties of a relationship that define how two code objects are different (e.g., a test for redundancy)
+    + `Intersective`: properties of a relationship that define how two code objects must remain similar (e.g., to guarantee that they agree on certain values)
+        * `Idempotence`: is an example of an intersective property of the relationship between a code object and any n-self-composition of itself.
 
 It might also be useful to differentiate between:
 
@@ -42,7 +42,7 @@ Time-dependent tests tend to take longer to test a particular property of a piec
 
 It is also true that all of these Test "Types" are really: `Assertion Types` (asserted properties). And often it is the case that a Test block (test function) contains multiple assertions about a (set of) code block(s). 
 
-Using Test Types allows us to group Test Blocks by assertion types (e.g. all Unitary property tests for a code block are in the same Test function).
+Using Test Types allows us to group Test Blocks by assertion types (e.g., all Unitary property tests for a code block are in the same Test function).
 
 ## Test Purpose/Focus
 
@@ -83,13 +83,13 @@ Why are contract tests important?
 
 ### Regression Tests
 
-Regression tests really do nothing more than give us pre-defined comfort/tolerance bounds for how much our code can "regress" per some metric e.g. performance, coverage, etc. Having these bounds allows for faster development cycles, instead of simply specifying that all code and tests should always be 100% perfection and never veer.
+Regression tests really do nothing more than give us pre-defined comfort/tolerance bounds for how much our code can "regress" per some metric e.g., performance, coverage, etc. Having these bounds allows for faster development cycles, instead of simply specifying that all code and tests should always be 100% perfection and never veer.
 
-- `Behavioral Regressions`: e.g. using [Diffy](https://github.com/twitter/diffy) for automated regression testing between API versions
+- `Behavioral Regressions`: e.g., using [Diffy](https://github.com/twitter/diffy) for automated regression testing between API versions
 - `Coverage Regression`: an example is if we are used to using mutation tests to ensure that our unit test has 100% code coverage, but we would be comfortable with anything above 90%, then a coverage regression test simply fails if the latest mutation test is under 90% coverage for one of our behavior tests.
 - `Performance Regressions`
     + `benchmark regressions`: ensuring that a modified piece of code still performs within certain bounds
-        * Intra-Differential (e.g. confirming that one function must always be a faster option than another function)
+        * Intra-Differential (e.g., confirming that one function must always be a faster option than another function)
     + `profiling regressions`: resource-usage regressions -- making sure we have not increased the computational time or memory usage of a code block more than a certain allowed delta.
     + `load regressions`: P9X latency category regressions
 - `Integration Regressions`: [Integration-Contract](https://martinfowler.com/bliki/IntegrationContractTest.html) Tests
@@ -167,7 +167,7 @@ package test
 type Test struct{
     ID int // must be unique
     Type string // should be a TestType enum
-    Purpose string // e.g. unit, integration, fuzz, mutation, etc.
+    Purpose string // e.g., unit, integration, fuzz, mutation, etc.
     Maturity string // should be a TestMaturity enum
 }
 
